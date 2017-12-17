@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration scan="true" scanPeriod="10 seconds" debug="true">
+   
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+			<pattern>%d{"yyyy-MM-dd HH:mm:ss,SSS Z" GMT+3} [%c{30}] %-6p%m%n</pattern>
+        </encoder>
+    </appender>
+<!--     <logger name="mail.tests" level="info">
+        <appender-ref ref="STDOUT" />
+    </logger> -->
+    
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>test-output/logs/tests-execution.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>test-output/logs/tests-execution.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>5</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{"yyyy-MM-dd HH:mm:ss,SSS Z" GMT+3} [%c{30}] %-6p%m%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="mail.tests" level="debug">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <appender name="TestNG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>test-output/logs/testng-reports.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>test-output/logs/testng-reports.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>5</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{"yyyy-MM-dd HH:mm:ss,SSS Z" GMT+3} [%c{30}] %-6p%m%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="org.testng" level="debug">
+        <appender-ref ref="TestNG" />
+    </logger>
+
+    <!-- <logger name="mail.tests" level="debug"/> -->
+
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+        <!-- <appender-ref ref="FILE"/> -->
+    </root>
+    
+</configuration>
