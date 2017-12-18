@@ -20,9 +20,9 @@
             <pattern>%d{"yyyy-MM-dd HH:mm:ss,SSS Z" GMT+3} [%c{30}] %-6p%m%n</pattern>
         </encoder>
     </appender>
-    <logger name="mail.tests" level="debug">
-        <appender-ref ref="FILE" />
-    </logger>
+    <!--<logger name="mail.tests" level="debug">-->
+        <!--<appender-ref ref="FILE" />-->
+    <!--</logger>-->
 
     <appender name="TestNG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>test-output/logs/testng-reports.log</file>
@@ -40,9 +40,9 @@
 
     <!-- <logger name="mail.tests" level="debug"/> -->
 
-    <root level="info">
+    <root level="debug">
         <appender-ref ref="STDOUT"/>
-        <!-- <appender-ref ref="FILE"/> -->
+         <appender-ref ref="FILE"/>
     </root>
     
 </configuration>

@@ -6,6 +6,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Entities;
 import org.jsoup.parser.Parser;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.testng.Assert;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
@@ -28,7 +29,13 @@ public class MailPageHelper extends HelperBase {
   By searchButtonLocator = By.xpath("//div[@class='mail-SearchContainer']//button");
   By messagesSearchInfoLocator = By.xpath("//div[contains(@class,'mail-MessagesSearchInfo')]");
   By logOutButton = By.xpath("//a[contains(@href, 'action=logout')]");
-  By messageLocator = By.xpath("//a[@href='#message/" + manager.messageID + "']");
+  By messageLocator = By.xpath("//div[contains(@class, 'mail-MessagesList')]//span[contains(@title, '" + manager.subject + "')]/ancestor::a[1]");
+  By advSearchLocator = By.xpath("//span[contains(@class, 'mail-SearchInput_IconContainer')][2]");
+  String chooseFoldersLocator = "//div[@class='mail-AdvancedParams-Row'][2]";
+  String advSearchButtonsLocator = "//span[@class='button2__text']";
+  String containsTextInboxLocator = "[contains(text(), 'Входящие') or contains(text(), 'Inbox')]";
+  By advSearchInboxLocator = By.xpath("//span[@class='menu__text']" + containsTextInboxLocator);
+
 
   public MailPageHelper(ApplicationManager manager) {
     super(manager);
@@ -47,16 +54,26 @@ public class MailPageHelper extends HelperBase {
     click(logOutButton);
   }
 
-  public void searchMessage(String messageID) {
-    type(searchContainerLocator, messageID);
+  public void searchMessage(String searchString) {
+    click(searchContainerLocator);
+    waitPresence(advSearchLocator);
+    openAdvSearch();
+    chooseInbox();
+    type(searchContainerLocator, searchString);
     click(searchButtonLocator);
     waitPresence(messagesSearchInfoLocator);
   }
 
   public void openMessage() {
-    searchMessage(manager.messageID);
+    searchMessage(manager.subject);
     click(messageLocator);
-    waitPresence(subjLocator);
+    try {
+      waitPresence(subjLocator);
+    } catch (TimeoutException e) {
+      logger.debug("Catch " + e.getMessage() + "\nWill try second attempt.");
+      click(messageLocator);
+      waitPresence(subjLocator);
+    }
   }
 
   public void checkSubject() {
@@ -101,4 +118,20 @@ public class MailPageHelper extends HelperBase {
       fail("Something goes wrong: " + e.getMessage());
     }
   }
+
+  public void openAdvSearch() {
+    click(advSearchLocator);
+    waitPresence(By.xpath(chooseFoldersLocator));
+  }
+
+  public void chooseInbox() {
+    String text = getText(By.xpath(chooseFoldersLocator + advSearchButtonsLocator));
+    if (!(text.contains("Входящие") || text.contains("Inbox"))) {
+      click(By.xpath(chooseFoldersLocator));
+      waitPresence(advSearchInboxLocator);
+      click(advSearchInboxLocator);
+      waitPresence(By.xpath(chooseFoldersLocator + advSearchButtonsLocator + containsTextInboxLocator));
+    }
+  }
+
 }

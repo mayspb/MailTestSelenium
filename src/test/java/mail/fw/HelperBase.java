@@ -28,10 +28,13 @@ public abstract class HelperBase {
   }
 
   protected void click(By locator) {
+    waitClickable(locator);
     logger.debug("Click on element '{}'", locator);
     try {
       driver.findElement(locator).click();
     } catch (StaleElementReferenceException e) {
+      logger.debug("Catch " + e.getMessage() + "\nWill try second attempt.");
+      logger.debug("Click on element '{}'", locator);
       driver.findElement(locator).click();
     }
   }
@@ -62,4 +65,10 @@ public abstract class HelperBase {
     logger.debug("Wait presence of element located by '{}'", locator);
     wait.until(ExpectedConditions.presenceOfElementLocated(locator));
   }
+
+  protected void waitClickable(By locator) {
+    logger.debug("Wait element to be clickable located by '{}'", locator);
+    wait.until(ExpectedConditions.elementToBeClickable(locator));
+  }
+
 }
