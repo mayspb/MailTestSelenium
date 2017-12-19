@@ -79,12 +79,12 @@ public class MailPageHelper extends HelperBase {
   }
 
   public void checkSubject() {
-    logger.debug("Comparing the subject of a message with a template.");
+    logger.debug("Comparing the subject of the message with the template.");
     Assert.assertEquals(getText(subjLocator), manager.subject);
   }
 
   public void checkSender() {
-    logger.debug("Comparing the sender of a message with a template.");
+    logger.debug("Comparing the sender of the message with the template.");
     Assert.assertEquals(getText(senderLocator), manager.sender);
   }
 
@@ -111,6 +111,7 @@ public class MailPageHelper extends HelperBase {
   }
 
   public void checkMessageBody() {
+    logger.debug("Comparing the body of the message with the template.");
     try {
       Assert.assertFalse(compareMessageBody(), "Message body is different!");
     } catch (Exception e) {
@@ -128,7 +129,6 @@ public class MailPageHelper extends HelperBase {
     String text = getText(By.xpath(chooseFoldersLocator + advSearchButtonsLocator));
     if (!(text.contains("Входящие") || text.contains("Inbox"))) {
       click(By.xpath(chooseFoldersLocator));
-      waitPresence(advSearchInboxLocator);
       click(advSearchInboxLocator);
       waitPresence(By.xpath(chooseFoldersLocator + advSearchButtonsLocator + containsTextInboxLocator));
     }
