@@ -35,6 +35,7 @@ public class MailPageHelper extends HelperBase {
   String advSearchButtonsLocator = "//span[@class='button2__text']";
   String containsTextInboxLocator = "[contains(text(), 'Входящие') or contains(text(), 'Inbox')]";
   By advSearchInboxLocator = By.xpath("//span[@class='menu__text']" + containsTextInboxLocator);
+  By messageBodyLocator = By.xpath("//div[@class='mail-Message-Body-Content']");
 
 
   public MailPageHelper(ApplicationManager manager) {
@@ -46,6 +47,7 @@ public class MailPageHelper extends HelperBase {
   }
 
   public void checkAuth() {
+    logger.debug("Checking if authentication session is on and username is corresponds to template.");
     Assert.assertEquals(manager.login, getText(userNameLocator));
   }
 
@@ -77,19 +79,17 @@ public class MailPageHelper extends HelperBase {
   }
 
   public void checkSubject() {
+    logger.debug("Comparing the subject of a message with a template.");
     Assert.assertEquals(getText(subjLocator), manager.subject);
   }
 
   public void checkSender() {
+    logger.debug("Comparing the sender of a message with a template.");
     Assert.assertEquals(getText(senderLocator), manager.sender);
   }
 
-  public String getMessageBody() {
-    return driver.findElement(By.xpath("//div[@class='mail-Message-Body-Content']")).getAttribute("innerHTML");
-  }
-
   public void writeMessageBody() throws IOException {
-    FileUtils.writeStringToFile(new File(fNameTest), parserXHtml(getMessageBody()), "UTF-8");
+    FileUtils.writeStringToFile(new File(fNameTest), parserXHtml(getInnerHTML(messageBodyLocator)), "UTF-8");
   }
 
   public String parserXHtml(String html) {

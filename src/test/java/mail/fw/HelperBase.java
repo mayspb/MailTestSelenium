@@ -71,4 +71,9 @@ public abstract class HelperBase {
     wait.until(ExpectedConditions.elementToBeClickable(locator));
   }
 
+  protected String getInnerHTML(By locator) {
+    logger.debug("Get attribute innerHTML from element {}", locator);
+    return driver.findElement(locator).getAttribute("innerHTML");
+  }
+
 }

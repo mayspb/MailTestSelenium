@@ -11,6 +11,7 @@ public class HomePageHelper extends HelperBase {
   }
 
   public void checkAuthIsOff() {
+    logger.debug("Checking if authentication session is off.");
     Assert.assertTrue( driver.findElements(authButton).size() != 0, "Auth session is still alive!");
   }
 
